@@ -23,10 +23,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Sitecore.Data.Items;
 using Sitecore.Data;
+using Sitecore.EmailCampaign.Cm.Dispatch;
 
 namespace Sitecore.Support.EmailCampaign.Server.Controllers.SendQuickTest
 {
-  [ServicesController("EXM.ExecuteSendQuickTest")]
+  [ServicesController("EXM.ExecuteSendQuickTestEx")]
   [SitecoreAuthorize(new string[]
 {
   "sitecore\\EXM Advanced Users",
@@ -100,7 +101,18 @@ namespace Sitecore.Support.EmailCampaign.Server.Controllers.SendQuickTest
                 _registryHelper.LastTestEmail = data.TestEmails;
                 try
                 {
-                  RunQuickTest(data.TestEmails, data.VariantIds, messageItem, abnTest);
+                  var sentData = RunQuickTest(data.TestEmails, data.VariantIds, messageItem, abnTest);
+
+                  if (sentData.Any(sd => sd.Errors.Any()))
+                  {
+                    return new Response
+                    {
+                      Error = true,
+                      ErrorMessage = string.Join("\n", sentData.Select(sd => sd.Errors))
+                    };
+
+
+                  }
                 }
                 catch (EmailCampaignException ex)
                 {
@@ -170,11 +182,12 @@ namespace Sitecore.Support.EmailCampaign.Server.Controllers.SendQuickTest
       return string.Empty;
     }
 
-    private void RunQuickTest(string recipientEmailAddresses, IEnumerable<string> variantIds, MessageItem messageItem, AbnTest abnTest)
+    private List<SendingProcessData> RunQuickTest(string recipientEmailAddresses, IEnumerable<string> variantIds, MessageItem messageItem, AbnTest abnTest)
     {
+      List<SendingProcessData> sentData = new List<SendingProcessData>();
       if (abnTest == null || abnTest.TestCandidates.Count < 2)
       {
-        SendMessage(recipientEmailAddresses, messageItem, null);
+       sentData.Add(SendMessage(recipientEmailAddresses, messageItem, null));
       }
       else
       {
@@ -183,24 +196,27 @@ namespace Sitecore.Support.EmailCampaign.Server.Controllers.SendQuickTest
           Item item = abnTest.TestCandidates.FirstOrDefault((Item x) => x.ID == new ID(variantId));
           if (item != null)
           {
-            SendMessage(recipientEmailAddresses, messageItem, item);
+            sentData.Add(SendMessage(recipientEmailAddresses, messageItem, item));
           }
         }
       }
+
+      return sentData;
     }
 
-    private void SendMessage(string recipientEmailAddresses, MessageItem messageItem, Item variantTargetItem)
+    private SendingProcessData SendMessage(string recipientEmailAddresses, MessageItem messageItem, Item variantTargetItem)
     {
       MessageItem messageItem2 = messageItem.Clone() as MessageItem;
-      if (messageItem2 != null)
-      {
+      Assert.IsNotNull(messageItem2, "Cannot clone messageItem");
+     
         WebPageMail webPageMail;
         if (variantTargetItem != null && (webPageMail = (messageItem2 as WebPageMail)) != null)
         {
           webPageMail.TargetItem = variantTargetItem;
         }
-        _sendingManagerFactory.GetSendingManager(messageItem2).SendTestMessage(recipientEmailAddresses, 1);
-      }
+
+       return _sendingManagerFactory.GetSendingManager(messageItem2).SendTestMessage(recipientEmailAddresses, 1);
+      
     }
   }
 }

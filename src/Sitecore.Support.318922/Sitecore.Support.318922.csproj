@@ -42,6 +42,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\SC.Microsoft.Extensions.DependencyInjection.Abstractions.9.0.2\lib\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Sitecore.EmailCampaign, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SC.Sitecore.EmailCampaign.9.0.2\lib\Sitecore.EmailCampaign.dll</HintPath>
       <Private>False</Private>
@@ -78,6 +82,10 @@
       <HintPath>..\packages\SC.Sitecore.Services.Infrastructure.9.0.2\lib\Sitecore.Services.Infrastructure.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Sitecore.Services.Infrastructure.Sitecore, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SC.Sitecore.Services.Infrastructure.Sitecore.9.0.2\lib\Sitecore.Services.Infrastructure.Sitecore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -89,16 +97,19 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomServiceConfigurator.cs" />
     <Compile Include="ExecuteSendQuickTestExController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SitecoreAuthorizeAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Config\Include\zzz\Sitecore.Support.318922.config" />
+    <Content Include="sitecore\shell\client\Applications\ECM\EmailCampaign.Client\constants.js" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app_config\include\zzz\Sitecore.Support.318922.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="packages.config" />
-    <None Include="web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

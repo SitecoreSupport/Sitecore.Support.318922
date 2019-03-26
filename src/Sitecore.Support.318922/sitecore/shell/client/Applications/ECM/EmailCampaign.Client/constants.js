@@ -50,7 +50,7 @@
         EMAIL_CHANNEL_PERFORMANCE_REPORT_KEY: "EXM/EmailChannelPerformanceReportKey",
         ENGAGEMENT_PLAN_URL: "EXM/EngagementPlanUrl",
         EXPERIENCE_ANALYTICS_KEY: 'EXM/ExperienceAnalyticsKey',
-        EXECUTE_SEND_QUICK_TEST: "EXM/ExecuteSendQuickTest",
+        EXECUTE_SEND_QUICK_TEST: "EXM/ExecuteSendQuickTestEx",
         FIRST_USAGE: "EXM/FirstUsage",
         IMPORT_HTML: "EXM/ImportHtml",
         LOAD_DEFAULT_SETTINGS: "EXM/LoadDefaultSettings",
